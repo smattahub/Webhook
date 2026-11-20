@@ -2,7 +2,7 @@
 # Build:  docker build -t github-webhook .
 # Run:    docker run -p 3000:3000 -e WEBHOOK_SECRET=<secret> github-webhook
 
-FROM node:22-alpine
+FROM node:26-alpine
 
 ENV NODE_ENV=production \
     PORT=3000
