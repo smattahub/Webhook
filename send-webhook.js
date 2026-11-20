@@ -1,10 +1,31 @@
 // Sends a fake GitHub-style delivery (same headers and signature scheme) for local testing.
-// Run:  WEBHOOK_SECRET=<secret> node send-webhook.js [ping|push|pull_request|issues]
+// Run:  node send-webhook.js [ping|push|pull_request|issues]
+//
+// The secret comes from WEBHOOK_SECRET if set, otherwise from the .env file that
+// start.sh creates next to this script. Never put a real secret in this file:
+// it is committed to git.
 
 const crypto = require("crypto");
+const fs = require("fs");
+const path = require("path");
+
+// Reads WEBHOOK_SECRET from .env (a "WEBHOOK_SECRET=..." line), or returns undefined.
+function secretFromEnvFile() {
+  try {
+    const text = fs.readFileSync(path.join(__dirname, ".env"), "utf8");
+    const match = text.match(/^\s*WEBHOOK_SECRET\s*=\s*["']?([^"'\r\n]+?)["']?\s*$/m);
+    return match ? match[1] : undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 const URL = process.env.WEBHOOK_URL || "http://localhost:3000/webhook";
-const SECRET = process.env.WEBHOOK_SECRET || "dev-secret";
+const SECRET = process.env.WEBHOOK_SECRET || secretFromEnvFile();
+if (!SECRET) {
+  console.error("No secret found. Run ./start.sh once to create .env, or set WEBHOOK_SECRET.");
+  process.exit(1);
+}
 const event = process.argv[2] || "ping";
 
 const repository = { full_name: "octo-org/hello-world" };

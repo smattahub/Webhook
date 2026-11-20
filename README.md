@@ -38,15 +38,23 @@ The server listens on `http://localhost:3000/webhook`. To use a different port, 
 
 ## 2. Test locally
 
-With the server running, open a second terminal in this folder and send a fake delivery signed with your saved secret:
+With the server running, open a second terminal in this folder and send a fake delivery:
 
 ```bash
-WEBHOOK_SECRET=$(./start.sh secret) node send-webhook.js ping
+node send-webhook.js ping
 ```
 
-Other sample events: `push`, `pull_request`, `issues`. Each one should return `202` and print a line in the server log. If you send with the wrong secret, the server returns `401`.
+It signs the delivery with the secret saved in `.env`, so nothing else is needed. Other sample events: `push`, `pull_request`, `issues`. Each one should return `202` and print a line in the server log.
+
+To check that bad signatures are rejected, override the secret. The server should return `401`:
+
+```bash
+WEBHOOK_SECRET=wrong node send-webhook.js push
+```
 
 If the server runs somewhere else, set `WEBHOOK_URL` to point the sender at it.
+
+Never write the real secret into `send-webhook.js` or any other committed file. This repository is public.
 
 ## 3. Expose the server to GitHub
 
