@@ -32,7 +32,7 @@ npm run check       # syntax check
 Then send a test delivery from a second terminal:
 
 ```bash
-WEBHOOK_SECRET=$(./start.sh secret) node send-webhook.js push
+node send-webhook.js push
 ```
 
 When you add a handler or change request handling, add a test for it in `test/webhook-server.test.js`.
