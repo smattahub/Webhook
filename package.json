@@ -1,0 +1,16 @@
+{
+  "name": "github-webhook",
+  "version": "1.0.0",
+  "description": "GitHub webhook receiver with signature verification",
+  "private": true,
+  "main": "webhook-server.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node webhook-server.js",
+    "test": "node --test test/*.test.js",
+    "check": "node --check webhook-server.js && node --check send-webhook.js"
+  },
+  "license": "UNLICENSED"
+}

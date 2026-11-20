@@ -8,10 +8,16 @@ A small Node.js server that receives GitHub webhooks, checks their signatures, a
 | `webhook-server.js` | The receiver. Listens on `POST /webhook`. |
 | `send-webhook.js` | Sends fake GitHub deliveries so you can test locally. |
 | `.env` | Created by `start.sh`; holds your secret. Git ignores it — never commit it. |
+| `test/` | Automated tests. Run with `npm test`. |
+| `Dockerfile` | Production container image. |
+| `.github/workflows/ci.yml` | CI: tests, Docker build, image publishing. |
+| `DEVOPS.md` | How changes are tested, reviewed, released and deployed. |
+
+For the branch → pull request → CI → release → deploy workflow, see [DEVOPS.md](DEVOPS.md).
 
 ## Requirements
 
-- Node.js 18 or newer (for built-in `fetch`)
+- Node.js 20 or newer
 - To receive real deliveries on your own machine: [cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/), so GitHub can reach it (`brew install cloudflared`, no account needed)
 
 ## 1. Start the server
@@ -96,6 +102,14 @@ const handlers = {
 ```
 
 GitHub's [webhook events and payloads](https://docs.github.com/webhooks/webhook-events-and-payloads) reference lists every event type and the fields its payload contains.
+
+## Running tests
+
+```bash
+npm test
+```
+
+The tests use Node's built-in test runner, so there's nothing to install. CI runs them on every push and pull request.
 
 ## Notes
 
